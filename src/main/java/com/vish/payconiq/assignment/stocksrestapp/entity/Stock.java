@@ -2,12 +2,14 @@ package com.vish.payconiq.assignment.stocksrestapp.entity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -19,8 +21,11 @@ public class Stock {
 	@Column(name="id")
 	private Long id;
 	
-	@Column(name="name", nullable=false)
+	@Column(name="name", nullable=false, length=5)
 	private String name;
+	
+	@Column(name="desc", length=30)
+	private String description;
 	
 	@Column(name="current_price")
 	private BigDecimal currentPrice;
@@ -31,10 +36,10 @@ public class Stock {
 	@Column(name="updated_ts")
 	private Timestamp updatedTs;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -42,6 +47,12 @@ public class Stock {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public BigDecimal getCurrentPrice() {
 		return currentPrice;
@@ -62,5 +73,16 @@ public class Stock {
 		this.updatedTs = updatedTs;
 	}
 	
+	@PrePersist
+	void preInsert() {
+	   if (this.createdTs == null) {
+		   this.createdTs = new Timestamp(new Date().getTime());
+	   }
+	   
+	   if (this.updatedTs == null) {
+		   this.updatedTs = new Timestamp(new Date().getTime());
+	   }
+	       
+	}
 
 }
