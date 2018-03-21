@@ -1,14 +1,19 @@
-package com.vish.payconiq.assignment.stocksrestapp.entity;
+package com.vish.payconiq.assignment.stocksrestapp.domain;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
@@ -21,7 +26,7 @@ public class Stock {
 	@Column(name="id")
 	private Long id;
 	
-	@Column(name="name", nullable=false, length=5)
+	@Column(name="name", nullable=false, length=5, unique=true)
 	private String name;
 	
 	@Column(name="desc", length=30)
@@ -35,6 +40,12 @@ public class Stock {
 	
 	@Column(name="updated_ts")
 	private Timestamp updatedTs;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "stock")
+	@OrderBy("price_ts")
+	private List<StockHistory> stockHistoryList;
 	
 	public Long getId() {
 		return id;
@@ -73,6 +84,13 @@ public class Stock {
 		this.updatedTs = updatedTs;
 	}
 	
+	public List<StockHistory> getStockHistoryList() {
+		return stockHistoryList;
+	}
+	public void setStockHistoryList(List<StockHistory> stockHistoryList) {
+		this.stockHistoryList = stockHistoryList;
+	}
+	
 	@PrePersist
 	void preInsert() {
 	   if (this.createdTs == null) {
@@ -82,7 +100,6 @@ public class Stock {
 	   if (this.updatedTs == null) {
 		   this.updatedTs = new Timestamp(new Date().getTime());
 	   }
-	       
 	}
 
 }

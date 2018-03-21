@@ -1,5 +1,8 @@
 package com.vish.payconiq.assignment.stocksrestapp.model;
 
+import java.util.Date;
+import java.util.Map;
+
 /**
  * @author Tharindu
  * <p>
@@ -9,6 +12,9 @@ package com.vish.payconiq.assignment.stocksrestapp.model;
  * <li>name - (stock name)</li>
  * <li>currentPrice - (current price of the stock)</li>
  * <li>lastUpdatedTime - (last updated time of the stock)</li>
+ * <li>priceIndex - (Whether price is a new one [0], increased [1], or decreased [-1] )</li>
+ * <li>priceHistoryMap - (History of prices for the particular stock. This will be included 
+ * when the details for a particular stock is enquired, not for the list of stocks)</li>
  * </p>
  */
 public class StockDetail {
@@ -17,7 +23,9 @@ public class StockDetail {
 	private String name;
 	private String description;
 	private String currentPrice;
-	private String lastUpdatedTime;
+	private Date lastUpdatedTime;
+	private int priceIndex; // 0 for new, -1 for decreases, 1 for increased
+	private Map<String, String> priceHistoryMap;
 	
 	public Long getId() {
 		return id;
@@ -43,11 +51,25 @@ public class StockDetail {
 	public void setCurrentPrice(String currentPrice) {
 		this.currentPrice = currentPrice;
 	}
-	public String getLastUpdatedTime() {
+	public Date getLastUpdatedTime() {
 		return lastUpdatedTime;
 	}
-	public void setLastUpdatedTime(String lastUpdatedTime) {
+	public void setLastUpdatedTime(Date lastUpdatedTime) {
 		this.lastUpdatedTime = lastUpdatedTime;
 	}
+	public Map<String, String> getPriceHistoryMap() {
+		return priceHistoryMap;
+	}
+	public void setPriceHistoryMap(Map<String, String> priceHistoryMap) {
+		this.priceHistoryMap = priceHistoryMap;
+	}
+	
+	public int getPriceIndex() {
+		return priceIndex;
+	}
+	public void setPriceIndex(int priceIndex) {
+		this.priceIndex = priceIndex;
+	}
+	
 
 }
