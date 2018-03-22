@@ -1,5 +1,12 @@
 package com.vish.payconiq.assignment.stocksrestapp.model;
 
+/**
+ * 
+ * @author Tharindu
+ * 
+ * This will be used to return error response back to the client
+ *
+ */
 public class ErrorResponse {
 	
 	private String errorCode;

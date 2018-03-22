@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vish.payconiq.assignment.stocksrestapp.domain.Stock;
 import com.vish.payconiq.assignment.stocksrestapp.exception.StocksServiceException;
 import com.vish.payconiq.assignment.stocksrestapp.model.ErrorResponse;
 import com.vish.payconiq.assignment.stocksrestapp.model.StockDetail;
@@ -44,6 +45,16 @@ public class StocksController {
 		this.stocksService = stocksService;
 	}
 	
+	/**
+	 * 
+	 * @return {@link List} of StockDetail
+	 * @throws StocksServiceException
+	 * 
+	 * <p>
+	 * This GET Http Request method returns list of all {@link StockDetail} available.
+	 * </p>
+	 * 
+	 */
 	@GetMapping
 	@ResponseBody
 	public List<StockDetail> getListOfStocks() throws StocksServiceException{
@@ -51,6 +62,17 @@ public class StocksController {
 		return stockDetailsList;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return {@link StockDetail}
+	 * @throws StocksServiceException
+	 * 
+	 * <p>
+	 * Provided an id, this HTTP Get Request method returns detailed {@link StockDetail}
+	 * It also contains a map of history data in the format of 'date -> price'
+	 * </p>
+	 */
 	@GetMapping("/{id}")
 	@ResponseBody
 	public StockDetail getStockById(@PathVariable Long id) throws StocksServiceException{
@@ -58,12 +80,31 @@ public class StocksController {
 		return stockDetail;
 	}
 	
+	/**
+	 * 
+	 * @param stockDetail
+	 * @return {@link StockDetail}
+	 * @throws StocksServiceException
+	 * 
+	 * <p>This HTTP Post method is used for creating a new {@link Stock}.
+	 * If a stock already exists with the same name, the existing record will be updated.</p>
+	 * 
+	 */
 	@PostMapping
 	public StockDetail addStock(@RequestBody StockDetail stockDetail) throws StocksServiceException {
 		stockDetail = stocksService.addStock(stockDetail);
 		return stockDetail;
 	}
 	
+	/**
+	 * 
+	 * @param stockDetail
+	 * @return {@link StockDetail}
+	 * @throws StocksServiceException
+	 * 
+	 * <p>This HTTP Put method is used for updating an existing {@link Stock} record.</p>
+	 * 
+	 */
 	@PutMapping
 	public StockDetail updateStock(@RequestBody StockDetail stockDetail) throws StocksServiceException {
 		stockDetail = stocksService.updateStock(stockDetail);

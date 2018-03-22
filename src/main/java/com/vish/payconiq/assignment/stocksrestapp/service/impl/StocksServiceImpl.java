@@ -34,6 +34,18 @@ public class StocksServiceImpl implements StocksService {
 		this.stocksRepository = repository;
 	}
 	
+	/**
+	 * 
+	 * @return {@link List} of StockDetail
+	 * @throws StocksServiceException
+	 * 
+	 * <p>
+	 * This is the service implementation method for getting list of {@link StockDetail}.
+	 * It gets the list of {@link Stock} data from the database and converts to the 
+	 * user response form which is {@link StockDetail}
+	 * </p>
+	 * 
+	 */
 	@Override
 	public List<StockDetail> getStocks() throws StocksServiceException {
 		List<Stock> stocks;
@@ -56,10 +68,22 @@ public class StocksServiceImpl implements StocksService {
 		return stockDetails;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return {@link StockDetail}
+	 * @throws StocksServiceException
+	 * 
+	 * <p>
+	 * Provided an id, this service implementation method returns detailed {@link StockDetail}.
+	 * It also contains a map of history data in the format of 'date -> price'
+	 * </p>
+	 */
 	@Override
 	public StockDetail getStockById(Long stockId) throws StocksServiceException {
 		Optional<Stock> stockOpt = stocksRepository.findById(stockId);
 		if (!stockOpt.isPresent()){
+			// no stock detail available for the provided ID
 			throw new StocksServiceException("No stock is available for given stock id", ErrorCode.NO_DATA_ERROR);
 		}
 		StockDetail stockDetail = mapStockToStockDetail(stockOpt.get(), true);
@@ -82,14 +106,18 @@ public class StocksServiceImpl implements StocksService {
 		
 		List<StockHistory> stockHistoryList = stock.getStockHistoryList();
 		if (CollectionUtils.isEmpty(stockHistoryList)) {
+			// no previous prices. Price index is 0
 			stockDetail.setPriceIndex(0);
 		}else {
+			// get the latest price from the price history and compare with the current price
+			// set -1 if the price has decreased, 1 if the price has increased, 0 if the price has not changed
 			BigDecimal prevPrice = stockHistoryList.get(stockHistoryList.size() -1).getHistoryPrice();
 			stockDetail.setPriceIndex(stock.getCurrentPrice().compareTo(prevPrice));
 		}
 
 		Map<String, String> priceHistoryMap = new LinkedHashMap<>();
 		if (includeHistory) {
+			// if price history should be included, prepare price_history map
 			List<StockHistory> stocksHistiryList = stock.getStockHistoryList();
 			if (!CollectionUtils.isEmpty(stocksHistiryList)) {
 				for (StockHistory stockHistory : stocksHistiryList) {
@@ -103,6 +131,16 @@ public class StocksServiceImpl implements StocksService {
 		return stockDetail;
 	}
 	
+	/**
+	 * 
+	 * @param stockDetail
+	 * @return {@link StockDetail}
+	 * @throws StocksServiceException
+	 * 
+	 * <p>This service implementation method is used for creating a new {@link Stock}.
+	 * If a stock already exists with the same name, the existing record will be updated.</p>
+	 * 
+	 */
 	@Override
 	public StockDetail addStock(StockDetail stockDetail) throws StocksServiceException{
 		
@@ -129,6 +167,15 @@ public class StocksServiceImpl implements StocksService {
 		return stockDetail;
 	}
 
+	/**
+	 * 
+	 * @param stockDetail
+	 * @return {@link StockDetail}
+	 * @throws StocksServiceException
+	 * 
+	 * <p>This service implementation method is used for updating an existing {@link Stock} record.</p>
+	 * 
+	 */
 	@Override
 	public StockDetail updateStock(StockDetail stockDetail) throws StocksServiceException {
 		Optional<Stock> stockOpt = stocksRepository.findById(stockDetail.getId());
