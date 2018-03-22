@@ -15,4 +15,6 @@ public interface StocksService {
 	
 	StockDetail updateStock (StockDetail stockDetail) throws StocksServiceException;
 
+	void validateStockDetailRequest(StockDetail stockDetail) throws StocksServiceException;
+
 }

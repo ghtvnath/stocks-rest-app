@@ -144,6 +144,8 @@ public class StocksServiceImpl implements StocksService {
 	@Override
 	public StockDetail addStock(StockDetail stockDetail) throws StocksServiceException{
 		
+		validateStockDetailRequest(stockDetail);
+		
 		// if stock already exists by the name, then just update the record. Stock name is Unique.
 		Optional<Stock> stockOpt = stocksRepository.findByName(stockDetail.getName().toUpperCase());
 		if (stockOpt.isPresent()) {
@@ -178,6 +180,9 @@ public class StocksServiceImpl implements StocksService {
 	 */
 	@Override
 	public StockDetail updateStock(StockDetail stockDetail) throws StocksServiceException {
+		
+		validateStockDetailRequest(stockDetail);
+		
 		Optional<Stock> stockOpt = stocksRepository.findById(stockDetail.getId());
 		if (!stockOpt.isPresent()){
 			throw new StocksServiceException("No stock is available for given stock id", ErrorCode.NO_DATA_ERROR);
@@ -206,6 +211,24 @@ public class StocksServiceImpl implements StocksService {
 			throw new StocksServiceException("Error persisting stock data", ErrorCode.APPLICATION_ERROR);
 		}
 		return stockDetail;
+	}
+	
+	/**
+	 * @param stockDetail
+	 * @throws StocksServiceException
+	 * 
+	 * <p>Validate whether {@link StockDetail} request body has minimum mandotory fields.
+	 * This method is exposed as public so that another service implementations can reuse it.</p>
+	 * 
+	 */
+	@Override
+	public void validateStockDetailRequest(StockDetail stockDetail) throws StocksServiceException {
+		if (StringUtils.isEmpty(stockDetail.getCurrentPrice())) {
+			throw new StocksServiceException("Current price attribute is empty", ErrorCode.INPUT_ERROR);
+		}
+		if (StringUtils.isEmpty(stockDetail.getName())) {
+			throw new StocksServiceException("Stock name attribute is empty", ErrorCode.INPUT_ERROR);
+		}
 	}
 
 }
