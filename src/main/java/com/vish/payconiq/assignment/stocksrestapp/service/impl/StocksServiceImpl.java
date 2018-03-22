@@ -103,6 +103,7 @@ public class StocksServiceImpl implements StocksService {
 		stockDetail.setCurrentPrice(currentPrice);
 		Date lastUpdatedTime = new Date(stock.getUpdatedTs().getTime());
 		stockDetail.setLastUpdatedTime(lastUpdatedTime);
+		stockDetail.setStrLastUpdatedTime(DateUtil.formatDate(stock.getUpdatedTs()));
 		
 		List<StockHistory> stockHistoryList = stock.getStockHistoryList();
 		if (CollectionUtils.isEmpty(stockHistoryList)) {
@@ -165,8 +166,7 @@ public class StocksServiceImpl implements StocksService {
 		if (stock == null){
 			throw new StocksServiceException("Error persisting stock data", ErrorCode.APPLICATION_ERROR);
 		}
-		stockDetail.setId(stock.getId());
-		return stockDetail;
+		return mapStockToStockDetail(stock, false);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class StocksServiceImpl implements StocksService {
 		if (stock == null){
 			throw new StocksServiceException("Error persisting stock data", ErrorCode.APPLICATION_ERROR);
 		}
-		return stockDetail;
+		return mapStockToStockDetail(stock, true);
 	}
 	
 	/**

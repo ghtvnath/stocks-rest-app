@@ -24,6 +24,7 @@ public class StockDetail {
 	private String description;
 	private String currentPrice;
 	private Date lastUpdatedTime;
+	private String strLastUpdatedTime;
 	private int priceIndex; // 0 for new, -1 for decreases, 1 for increased
 	private Map<String, String> priceHistoryMap;
 	
@@ -56,6 +57,12 @@ public class StockDetail {
 	}
 	public void setLastUpdatedTime(Date lastUpdatedTime) {
 		this.lastUpdatedTime = lastUpdatedTime;
+	}
+	public String getStrLastUpdatedTime() {
+		return strLastUpdatedTime;
+	}
+	public void setStrLastUpdatedTime(String strLastUpdatedTime) {
+		this.strLastUpdatedTime = strLastUpdatedTime;
 	}
 	public Map<String, String> getPriceHistoryMap() {
 		return priceHistoryMap;
