@@ -29,6 +29,11 @@ public class StocksServiceImpl implements StocksService {
 	@Autowired
 	StockRepository stocksRepository;
 	
+	// used only to set mock object in Unit Testing
+	protected void setStockRepository(StockRepository repository) {
+		this.stocksRepository = repository;
+	}
+	
 	@Override
 	public List<StockDetail> getStocks() throws StocksServiceException {
 		List<Stock> stocks;
