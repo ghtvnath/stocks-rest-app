@@ -33,6 +33,17 @@ public class StocksController {
 	@Autowired
 	StocksService stocksService;
 	
+	/**
+	 * In application runtime, stocksService is autowired by spring framework. 
+	 * 
+	 * This setter method is only for JUnit to set Mock service. 
+	 * By declaring access method 'protected', it is made sure that this setter method 
+	 * is not being called from any other part of the application
+	 */
+	protected void setStocksService(StocksService stocksService){
+		this.stocksService = stocksService;
+	}
+	
 	@GetMapping
 	@ResponseBody
 	public List<StockDetail> getListOfStocks() throws StocksServiceException{
